@@ -1,5 +1,5 @@
 #!/bin/bash
-sh -x
+set -x
 master_ip=$(env|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F- '{print $1}')|awk -F= '{print $2}')
 while true;then
 do
