@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cp /tmp/sge/*  /opt/sge/
 /usr/sbin/service rpcbind start
 mkdir /home/sgeuser
 useradd -u 10000 sgeuser
