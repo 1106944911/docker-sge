@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sh -x 
 mv -rf /tmp/sge/*  /opt/sge/
 
 mkdir /home/sgeuser
