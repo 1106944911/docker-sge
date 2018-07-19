@@ -1,8 +1,8 @@
 #!/bin/bash
-sh -x 
+
 rm -rf /opt/sge/*
 rm -rf /home/sgeuser
-mv -rf /tmp/sge/*  /opt/sge/
+mv -f /tmp/sge/*  /opt/sge/
 
 mkdir /home/sgeuser
 useradd -u 10000 sgeuser
