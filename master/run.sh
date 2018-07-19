@@ -1,14 +1,6 @@
 #!/bin/bash
 
-mv /opt/sge /tmp/
 /usr/sbin/service rpcbind start
-mount -t nfs ${SGE_USER_HOME} /home
-mount -t nfs ${SGE_WORK_HOME} /opt
-if [ -z "${NOT_INIT}" ]; then
-    rm -rf /opt/sge
-    rm -rf /home/sgeuser
-fi
-mv /tmp/sge /opt/
 mkdir /home/sgeuser
 useradd -u 10000 sgeuser
 chown sgeuser:sgeuser /home/sgeuser/
@@ -29,5 +21,5 @@ sed -e 's/^SGE_JMX_PORT=.*/SGE_JMX_PORT="6666"/' \
 sed -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=\`hostname -f\`/' \
     /opt/sge/install_sge_master.conf > /opt/sge/install_sge_worker.conf
 (cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
-sed -i 's%#   Port 22%#    Port 30222%' /etc/ssh/ssh_config
+sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
 exec /usr/sbin/sshd -D
