@@ -1,7 +1,7 @@
 #!/bin/bash
 sh -x
 master_ip=$(env|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F- '{print $1}')|awk -F= '{print $2}')
-while True;then
+while true;then
 do
   status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 sgeuser@$master_ip -p 30222 echo ok 2>&1)
 
