@@ -11,7 +11,7 @@ do
   if [[ $status == ok ]]
     echo 'connect master success'
     break
-  elif [[ $status == "Permission denied"* ]] ; then
+  elif [[ $status == "Permission denied"* ]]
      echo 'connect master refued'
   else
      echo 'connect master fail'
