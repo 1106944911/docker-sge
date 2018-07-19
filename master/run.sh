@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 rm -rf /opt/sge/*
 rm -rf /home/sgeuser
