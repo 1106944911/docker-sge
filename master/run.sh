@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp -rf /tmp/sge/*  /opt/sge/
+mv -rf /tmp/sge/*  /opt/sge/
 
 mkdir /home/sgeuser
 useradd -u 10000 sgeuser
