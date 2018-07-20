@@ -8,10 +8,10 @@ while true
 do
   status=$(sudo -u sgeuser bash -c "ssh -o BatchMode=yes -o ConnectTimeout=5 sgeuser@$master_ip -p 30222 echo ok 2>&1"|tail -n 1)
 
-  if [[ $status == ok ]]
+  if [[ $status == ok ]];then
     echo 'connect master success'
     break
-  elif [[ $status == "Permission denied"* ]]
+  elif [[ $status == "Permission denied"* ]];then
      echo 'connect master refued'
   else
      echo 'connect master fail'
