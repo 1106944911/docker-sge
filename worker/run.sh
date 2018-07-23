@@ -23,7 +23,7 @@ do
      sleep 1
   fi
 done
-host_name=$(hostname -f)
+host_name=$(hostname)
 echo ${host_svc_ip}  ${host_name} >> /opt/sge/hosts
 (sleep 10; sudo -u sgeuser bash -c "ssh ${master_ip} -p 30222 \"sudo bash -c '. /etc/profile.d/sge.sh; echo ${host_svc_ip}  ${host_name}>>/etc/hosts; qconf -ah `hostname -f`; qconf -as `hostname -f`'\""; cd /opt/sge; ./inst_sge -x -auto install_sge_worker.conf -nobincheck) &
 exec /usr/sbin/sshd -D
