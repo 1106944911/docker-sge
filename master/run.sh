@@ -33,4 +33,10 @@ cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
 cat /etc/hosts.bak > /etc/hosts
+slave_hosts=`env | grep BATCH_SGE-WORKER_HOSTS|awk -F "="   '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'`
+for line in ${slave_hosts}
+do
+	echo "Add slave_host:$line"
+	. /etc/profile.d/sge.sh; qconf -ah $line; qconf -as $line;
+done
 exec /usr/sbin/sshd -D
