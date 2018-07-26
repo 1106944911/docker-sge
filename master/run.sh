@@ -34,6 +34,9 @@ sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
 cat /etc/hosts.bak > /etc/hosts
 slave_hosts=`env | grep BATCH_SGE-WORKER_HOSTS|awk -F "="   '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'`
+echo ${slave_hosts} >> /opt/sge/123
+echo 123 >> /opt/sge/123
+echo `env` >> /opt/sge/123
 for line in ${slave_hosts}
 do
 	echo "Add slave_host:$line"
