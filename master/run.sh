@@ -34,10 +34,9 @@ sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
 cat /etc/hosts.bak > /etc/hosts
 slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sort|uniq|sed 's/_/-/g')
-echo $slave_hosts > /opt/sge/123
 for line in ${slave_hosts}
 do
 	echo "Add slave_host:$line"
-	. /etc/profile.d/sge.sh; qconf -ah $line; qconf -as $line;
+	. /etc/profile.d/sge.sh; qconf -ah $line; qconf -as $line; qconf -ae $line;
 done
 exec /usr/sbin/sshd -D
