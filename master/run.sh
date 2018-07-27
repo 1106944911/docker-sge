@@ -34,7 +34,7 @@ cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
-env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|while read line
+env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\t"$1}'|while read line
 do
 	echo "Add svc host: ${line}"
 	echo "${line}" >> /opt/sge/hosts
