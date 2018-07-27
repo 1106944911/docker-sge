@@ -22,7 +22,7 @@ sed -e 's/^SGE_JMX_PORT=.*/SGE_JMX_PORT="6666"/' \
     -e 's/^SUBMIT_HOST_LIST=.*/SUBMIT_HOST_LIST=\`hostname -f\`/' \
     -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=""/' \
     /opt/sge/util/install_modules/inst_template.conf > /opt/sge/install_sge_master.conf
-sed -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=\`env|grep BATCH_CURRENT_HOST|awk -F "=" '\''{print $2}'\''|awk -F ","  '\''{for(i=1;i<=NF;i++){print $i}}'\''|awk -F ":" '\''{print $1}'\''|awk '\''{for(i = 1;i<=NF;i++){ print$i }}'\''\`/' \
+sed -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=\`hostname -f\`/' \
     /opt/sge/install_sge_master.conf > /opt/sge/install_sge_worker.conf
 (cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
 sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
