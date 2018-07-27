@@ -23,8 +23,14 @@ do
      sleep 1
   fi
 done
-cat /opt/sge/hosts|grep $master_ip >> /etc/hosts
-host_name=$(hostname)
-echo ${host_svc_ip}  ${host_name} >> /opt/sge/hosts
+
+host_ip=$(ip addr show eth0|grep -v grep|grep eth0|grep -v '32 scope global'|grep -v 'BROADCAST,MULTICAST'|awk -F "/" '{print $1}'|awk {'print $2'})
+host_name=$(hostname -f)
+cp /etc/hosts /etc/hosts.bak
+sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
+cat /opt/sge/hosts >> /etc/hosts.bak
+cat /etc/hosts.bak > /etc/hosts
+echo 'Add svc host, current hosts:'
+cat /etc/hosts
 (sleep 10; cd /opt/sge; ./inst_sge -x -auto install_sge_worker.conf -nobincheck) &
 exec /usr/sbin/sshd -D
