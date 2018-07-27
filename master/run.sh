@@ -29,23 +29,21 @@ sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
 host_svc_ip=$(env|grep $(echo ${BATCH_JOB_ID}_${BATCH_TASKGROUP_NAME}${BATCH_TASK_INDEX}_service_host|tr 'a-z' 'A-Z'|tr '-' '_')|awk -F= '{print $2}')
 host_ip=$(ip addr show eth0|grep -v grep|grep eth0|grep -v '32 scope global'|grep -v 'BROADCAST,MULTICAST'|awk -F "/" '{print $1}'|awk {'print $2'})
 host_name=$(hostname -f)
+
 cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
+
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
-slave_hosts=$(env|grep WORKER|grep ADDR|sort|uniq)
-for line in ${slave_hosts}
-do
-	hostname=$(echo $line|awk -F'_PORT' '{print $1}'|sed 's/_/-/g')
-	hostip=$(echo $line|awk -F'=' '{print $2}')
-	echo "Add svc host: $hostip $hostname"
-	echo "$hostip $hostname" >> /opt/sge/hosts
-	echo "$hostip $hostname" >> /etc/hosts.bak
-done
+slave_hosts=$(env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq)
+echo $slave_hosts  >> /opt/sge/hosts
+echo $slave_hosts  >> /etc/hosts.bak
 cat /etc/hosts.bak > /etc/hosts
-slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sort|uniq|sed 's/_/-/g')
+sleep 5000
 for line in ${slave_hosts}
 do
-	echo "Add slave_host:$line"
-	. /etc/profile.d/sge.sh; qconf -ah $line; qconf -as $line; qconf -ae $line;
+	host_name=$(echo $line|awk '{print $1}')
+	echo "Add slave_host:$host_name"
+	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name; qconf -ae $host_name;
 done
+
 exec /usr/sbin/sshd -D
