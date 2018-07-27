@@ -32,6 +32,15 @@ host_name=$(hostname -f)
 cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
+slave_hosts=$(env|grep WORKER|grep ADDR|sort|uniq)
+for line in ${slave_hosts}
+do
+	hostname=$(echo $line|awk -F'_PORT' '{print $1}'|sed 's/_/-/g')
+	hostip=$(echo $line|awk -F'=' '{print $2}')
+	echo "Add svc host: $hostip $hostname"
+	echo "$hostip $hostname" >> /opt/sge/hosts
+	echo "$hostip $hostname" >> /etc/hosts.bak
+done
 cat /etc/hosts.bak > /etc/hosts
 slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sort|uniq|sed 's/_/-/g')
 for line in ${slave_hosts}
