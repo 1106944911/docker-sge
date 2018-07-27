@@ -34,7 +34,7 @@ cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
-env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\t"$1}'|while read line
+env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\tsvc_"$1}'|while read line
 do
 	echo "Add svc host: ${line}"
 	echo "${line}" >> /opt/sge/hosts
@@ -45,7 +45,7 @@ sleep 5
 slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sed 's/_/-/g'|sort|uniq)
 for line in ${slave_hosts}
 do
-	host_name=$(echo $line|awk '{print $1}')
+	host_name=$(echo $line|awk '{print "svc_"$1}')
 	echo "Add slave_host:$host_name"
 	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name; qconf -ae $host_name;
 done
