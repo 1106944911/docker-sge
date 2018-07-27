@@ -37,6 +37,9 @@ slave_hosts=$(env | grep BATCH_SGE-WORKER_HOSTS|awk -F "="   '{print $2}'|awk -F
 echo ${slave_hosts} >> /opt/sge/123
 echo 123 >> /opt/sge/123
 echo `env` >> /opt/sge/123
+echo 123 >> /opt/sge/123
+echo ${BATCH_SGE-WORKER_HOSTS}
+echo $(env) >> /opt/sge/123
 for line in ${slave_hosts}
 do
 	echo "Add slave_host:$line"
