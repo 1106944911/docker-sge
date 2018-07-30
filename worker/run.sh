@@ -26,7 +26,7 @@ done
 
 host_ip=$(ip addr show eth0|grep -v grep|grep eth0|grep -v '32 scope global'|grep -v 'BROADCAST,MULTICAST'|awk -F "/" '{print $1}'|awk {'print $2'})
 host_name=$(hostname -f)
-svc_name=$(env|grep BATCH_CURRENT_HOST|awk -F "=" '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}')
+svc_name=$(env|grep BATCH_CURRENT_HOST|awk -F "=" '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'|tr A-Z a-z)
 cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 sed  -i "s/$host_name/svc_$svc_name $host_name/g" /etc/hosts.bak
