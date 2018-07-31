@@ -35,4 +35,6 @@ cat /etc/hosts.bak > /etc/hosts
 
 sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
 sed -i 's/#   Port 22/Port 30222/' /etc/ssh/ssh_config
+ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -P ""
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys; chmod 600 ~/.ssh/authorized_keys
 exec /usr/sbin/sshd -D
