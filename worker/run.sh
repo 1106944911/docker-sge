@@ -31,5 +31,8 @@ sed  -i "s/$host_name/$svc_name $host_name/g" /etc/hosts.bak
 cat /opt/sge/hosts >> /etc/hosts.bak
 cat /etc/hosts.bak > /etc/hosts
 
-(sleep 10; cd /opt/sge; ./inst_sge -x -auto install_sge_worker.conf -nobincheck) &
+(sleep 10; cd /opt/sge; ./install_execd) &
+
+sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
+sed -i 's/#   Port 22/Port 30222/' /etc/ssh/ssh_config
 exec /usr/sbin/sshd -D
