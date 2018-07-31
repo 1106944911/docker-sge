@@ -24,5 +24,12 @@ do
   fi
 done
 
+host_name=$(hostname -f)
+svc_name=$(env|grep BATCH_CURRENT_HOST|awk -F "=" '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'|tr A-Z a-z)
+cp /etc/hosts /etc/hosts.bak
+sed  -i "s/$host_name/$svc_name $host_name/g" /etc/hosts.bak
+cat /opt/sge/hosts >> /etc/hosts.bak
+cat /etc/hosts.bak > /etc/hosts
+
 (sleep 10; cd /opt/sge; ./inst_sge -x -auto install_sge_worker.conf -nobincheck) &
 exec /usr/sbin/sshd -D
