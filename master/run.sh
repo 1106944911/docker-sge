@@ -22,7 +22,9 @@ sed -e 's/^SGE_JMX_PORT=.*/SGE_JMX_PORT="6666"/' \
     -e 's/^SUBMIT_HOST_LIST=.*/SUBMIT_HOST_LIST=\`hostname -f\`/' \
     -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=""/' \
     /opt/sge/util/install_modules/inst_template.conf > /opt/sge/install_sge_master.conf
-
+sed -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=\`hostname -f\`/' \
+    /opt/sge/install_sge_master.conf > /opt/sge/install_sge_worker.conf
+    
 host_name=$(hostname -f)
 svc_name=$(env|grep BATCH_CURRENT_HOST|awk -F "=" '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'|tr A-Z a-z)
 cp /etc/hosts /etc/hosts.bak
