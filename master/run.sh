@@ -40,6 +40,8 @@ do
 done
 cat /etc/hosts.bak > /etc/hosts
 
+(cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
+
 slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sed 's/_/-/g'|sort|uniq|tr A-Z a-z)
 for line in ${slave_hosts}
 do
@@ -47,8 +49,6 @@ do
 	echo "Add slave_host:$host_name"
 	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name;
 done
-
-(cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
 
 sed -i 's/#   Port 22/Port 30222/' /etc/ssh/ssh_config
 sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
