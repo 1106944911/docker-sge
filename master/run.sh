@@ -24,23 +24,34 @@ sed -e 's/^SGE_JMX_PORT=.*/SGE_JMX_PORT="6666"/' \
     /opt/sge/util/install_modules/inst_template.conf > /opt/sge/install_sge_master.conf
 sed -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=\`hostname -f\`/' \
     /opt/sge/install_sge_master.conf > /opt/sge/install_sge_worker.conf
-    
+
+host_svc_ip=$(env|grep $(echo ${BATCH_JOB_ID}_${BATCH_TASKGROUP_NAME}${BATCH_TASK_INDEX}_service_host|tr 'a-z' 'A-Z'|tr '-' '_')|awk -F= '{print $2}')
 host_name=$(hostname -f)
 svc_name=$(env|grep BATCH_CURRENT_HOST|awk -F "=" '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'|tr A-Z a-z)
 cp /etc/hosts /etc/hosts.bak
-sed  -i "s/$host_name/$svc_name $host_name/g" /etc/hosts.bak
+sed  -i "s/$host_name/svc_$svc_name $host_name/g" /etc/hosts.bak
 cat /opt/sge/hosts >> /etc/hosts.bak
 cat /etc/hosts.bak > /etc/hosts
 
-(cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
+echo "$host_svc_ip svc_$host_name" >>/opt/sge/hosts
+env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\tsvc_"$1}'|tr A-Z a-z|while read line
+do
+	echo "Add svc host: ${line}"
+	echo "${line}" >> /opt/sge/hosts
+	echo "${line}" >> /etc/hosts.bak
+done
+cat /etc/hosts.bak > /etc/hosts
 
 slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sed 's/_/-/g'|sort|uniq|tr A-Z a-z)
 for line in ${slave_hosts}
 do
-	host_name=$(echo $line)
+	host_name=$(echo $line|awk '{print "svc_"$1}')
 	echo "Add slave_host:$host_name"
-	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name;
+	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name; qconf -ae $host_name;
 done
+
+
+(cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
 
 sed -i 's/#   Port 22/Port 30222/' /etc/ssh/ssh_config
 sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
