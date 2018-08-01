@@ -45,9 +45,8 @@ for line in ${slave_hosts}
 do
 	host_name=$(echo $line|awk '{print "svc_"$1}')
 	echo "Add slave_host:$host_name"
-	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name; qconf -ae $host_name;
+	. /etc/profile.d/sge.sh; qconf -ah $host_name; qconf -as $host_name;
 done
-
 
 (cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
 
