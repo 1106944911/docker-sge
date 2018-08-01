@@ -30,7 +30,6 @@ host_name=$(hostname -f)
 svc_name=$(env|grep BATCH_CURRENT_HOST|awk -F "=" '{print $2}'|awk -F ","  '{for(i=1;i<=NF;i++){print $i}}'|awk -F ":" '{print $1}'|awk '{for(i = 1;i<=NF;i++){ print$i }}'|tr A-Z a-z)
 cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_name/svc_$svc_name $host_name/g" /etc/hosts.bak
-cat /opt/sge/hosts >> /etc/hosts.bak
 
 echo "$host_svc_ip svc_$host_name" >>/opt/sge/hosts
 env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\tsvc_"$1}'|tr A-Z a-z|while read line
