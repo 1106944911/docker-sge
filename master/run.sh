@@ -32,7 +32,7 @@ cp /etc/hosts /etc/hosts.bak
 sed  -i "s/$host_name/svc_$svc_name $host_name/g" /etc/hosts.bak
 
 echo "$host_svc_ip svc_$svc_name" >>/opt/sge/hosts
-env|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\tsvc_"$1}'|tr A-Z a-z|while read line
+env|grep -i $BATCH_JOB_ID|grep WORKER|grep ADDR|sed -e 's/_PORT_[0-9]*_TCP_ADDR=/ /'|sort|uniq|sed 's/_/-/g'|awk '{print $2"\tsvc_"$1}'|tr A-Z a-z|while read line
 do
 	echo "Add svc host: ${line}"
 	echo "${line}" >> /opt/sge/hosts
@@ -42,7 +42,7 @@ cat /etc/hosts.bak > /etc/hosts
 
 (cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
 
-slave_hosts=$(env|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sed 's/_/-/g'|sort|uniq|tr A-Z a-z)
+slave_hosts=$(env|grep -i $BATCH_JOB_ID|grep WORKER|grep ADDR|awk -F'_PORT' '{print $1}'|sed 's/_/-/g'|sort|uniq|tr A-Z a-z)
 for line in ${slave_hosts}
 do
 	host_name=$(echo $line|awk '{print "svc_"$1}')
