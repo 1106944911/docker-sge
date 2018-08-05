@@ -8,6 +8,20 @@ master_ip=$(env|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F
 
 while true
 do
+  if [[-z "$master_ip"]];
+  then
+    while true
+    do
+      master_ip=$(cat /opt/sge/hosts|grep master|awk '{print $1}'）
+      if  [[-z "$master_ip"]];
+      then
+        echo $master_ip
+        sleep 1
+      else
+        break
+      fi
+    done
+      
   status=$(sudo -u sgeuser bash -c "ssh -o BatchMode=yes -o ConnectTimeout=5 sgeuser@$master_ip -p 30222 echo ok 2>&1"|tail -n 1)
   echo $status
 
