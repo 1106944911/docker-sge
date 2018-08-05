@@ -20,7 +20,8 @@ do
         break
       fi
     done
-
+  fi
+  
   status=$(sudo -u sgeuser bash -c "ssh -o BatchMode=yes -o ConnectTimeout=5 sgeuser@$master_ip -p 30222 echo ok 2>&1"|tail -n 1)
   echo $status
 
