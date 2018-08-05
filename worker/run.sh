@@ -7,7 +7,7 @@ master_ip=$(env|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F
 
 while true
 do
-  if [[-z "$master_ip" ]];
+  if [[ -z "$master_ip" ]];
   then
     while true
     do
@@ -37,7 +37,7 @@ do
      echo 'connect master fail'
      sleep 1
   fi
-  
+
 done
 
 cat /opt/sge/hosts|grep $master_ip >> /etc/hosts
