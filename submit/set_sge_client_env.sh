@@ -13,12 +13,12 @@ do
     while true
     do
       master_ip=$(cat /opt/sge/hosts|grep master|awk '{print $1}')
-      if  [[-z "$master_ip"]];
+      if [[ -z "$master_ip" ]];
       then
         echo $master_ip
         sleep 1
       else
-        break
+        breaks
       fi
     done
       
@@ -37,7 +37,9 @@ do
      echo 'connect master fail'
      sleep 1
   fi
+
 done
+
 cat /opt/sge/hosts|grep $master_ip >> /etc/hosts
 host_name=$(hostname)
 echo ${host_svc_ip}  ${host_name} >> /opt/sge/hosts
