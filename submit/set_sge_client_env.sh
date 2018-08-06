@@ -3,7 +3,7 @@
 set -x
 useradd -u 10000 sgeuser
 echo "sgeuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-host_svc_ip=$(env|grep $(echo ${BATCH_JOB_ID}_${BATCH_TASKGROUP_NAME}${BATCH_TASK_INDEX}_service_host|tr 'a-z' 'A-Z'|tr '-' '_')|awk -F= '{print $2}')
+host_svc_ip=$(env|grep -i SERVICE_HOST|grep -i ${BATCH_JOB_ID}|grep -i $(echo ${BATCH_TASKGROUP_NAME}|tr '-' '_')|grep -i ${BATCH_TASK_INDEX}|awk -F= '{print $2}')
 master_ip=$(env|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F- '{print $1}')|awk -F= '{print $2}')
 
 while true
