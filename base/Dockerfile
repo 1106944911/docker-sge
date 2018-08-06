@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 MAINTAINER wtakase <wataru.takase@kek.jp>
 
 RUN apt-get -y update
-RUN apt-get -y install openssh-server openssh-client nfs-common rpm alien curl sudo
+RUN apt-get -y install openssh-server openssh-client nfs-common rpm alien curl vi sudo libxml-simple-perl
 
 RUN apt-get -y build-dep gridengine
 RUN apt-get -y install libjemalloc-dev libssl-dev libncurses-dev libpam-dev net-tools \
