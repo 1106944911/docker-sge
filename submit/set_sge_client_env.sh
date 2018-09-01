@@ -10,6 +10,7 @@ then
    sge_master_job_id=$SGE_MASTER_JOB_ID
 else
    sge_master_job_id=$BATCH_JOB_ID
+fi
    
 master_ip=$(env|grep -i $sge_master_job_id|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F- '{print $1}')|awk -F= '{print $2}')
 
