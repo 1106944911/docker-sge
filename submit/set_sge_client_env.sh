@@ -6,10 +6,10 @@ echo "sgeuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 host_svc_ip=$(env|grep SERVICE_HOST|grep $(env|grep CURRENT_HOST|awk -F '=' '{print $2}'|awk -F ':' '{print $1}'|tr '-' '_'|tr 'a-z' 'A-Z')|awk -F= '{print $2}')
 if [[ -z "$SGE_MASTER_JOB_ID" ]];
 then
-   echo 'user ses sge master job'
-   sge_master_job_id=$SGE_MASTER_JOB_ID
-else
    sge_master_job_id=$BATCH_JOB_ID
+else
+   echo 'user set sge master job'
+   sge_master_job_id=$SGE_MASTER_JOB_ID
 fi
    
 master_ip=$(env|grep -i $sge_master_job_id|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F- '{print $1}')|awk -F= '{print $2}')
