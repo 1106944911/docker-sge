@@ -26,7 +26,7 @@ do
         echo $master_ip
         sleep 1
       else
-        breaks
+        break
       fi
     done
   fi
