@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-
+chmod -R 777 /batch_holder/fvvirmp/*
 rm -rf /opt/sge/*
 rm -rf /home/sgeuser
 mv -f /tmp/sge/*  /opt/sge/
