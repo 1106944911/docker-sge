@@ -1,9 +1,9 @@
 #!/bin/bash
 set -x
-chmod -R 777 /batch_holder/fvvirmp/*
+set_input_and_output_777
 useradd -u 10000 sgeuser
 echo "sgeuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-host_svc_ip=$(env|grep SERVICE_HOST|grep $(env|grep CURRENT_HOST|awk -F '=' '{print $2}'|awk -F ':' '{print $1}'|tr '-' '_'|tr 'a-z' 'A-Z')|awk -F= '{print $2}')
+host_svc_ip=$(env|grep SERVICE_HOST|grep $(env|grep BATCH_CURRENT_HOST|awk -F '=' '{print $2}'|awk -F ':' '{print $1}'|tr '-' '_'|tr 'a-z' 'A-Z')|awk -F= '{print $2}')
 master_ip=$(env|grep $BATCH_JOB_ID|grep SGE|grep MASTER|grep SERVICE_HOST|grep -i $(hostname|awk -F- '{print $1}')|awk -F= '{print $2}')
 
 while true
