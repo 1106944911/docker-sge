@@ -27,7 +27,7 @@ sed -e 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST=\`hostname -f\`/' \
     /opt/sge/install_sge_master.conf > /opt/sge/install_sge_worker.conf
 (cd /opt/sge; ./inst_sge -m -auto ./install_sge_master.conf)
 sed -i 's/Port 22/Port 30222/' /etc/ssh/sshd_config
-host_svc_ip=$(env|grep SERVICE_HOST|grep $(env|grep CURRENT_HOST|awk -F '=' '{print $2}'|awk -F ':' '{print $1}'|tr '-' '_'|tr 'a-z' 'A-Z')|awk -F= '{print $2}')
+host_svc_ip=$(env|grep SERVICE_HOST|grep $(env|grep BATCH_CURRENT_HOST|awk -F '=' '{print $2}'|awk -F ':' '{print $1}'|tr '-' '_'|tr 'a-z' 'A-Z')|awk -F= '{print $2}')
 host_ip=$(ip addr show eth0|grep -v grep|grep eth0|grep -v '32 scope global'|grep -v 'BROADCAST,MULTICAST'|awk -F "/" '{print $1}'|awk {'print $2'})
 host_name=$(hostname -f)
 cp /etc/hosts /etc/hosts.bak
