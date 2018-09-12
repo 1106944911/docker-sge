@@ -1,6 +1,7 @@
 #!/bin/bash
 set -x
-chmod -R 777 /batch_holder/fvvirmp/*
+set_input_and_output_777 
+
 rm -rf /opt/sge/*
 rm -rf /home/sgeuser
 mv -f /tmp/sge/*  /opt/sge/
@@ -34,3 +35,38 @@ sed  -i "s/$host_ip/$host_svc_ip/g" /etc/hosts.bak
 echo "$host_svc_ip $host_name" >>/opt/sge/hosts
 cat /etc/hosts.bak > /etc/hosts
 exec /usr/sbin/sshd -D
+
+function set_input_and_output_777()
+{
+
+ input=${BATCH_INPUT_PATH//\"/}
+ input=${input//[/}
+ input=${input//]/}
+ input=${input//,/ }
+ for path in $input
+ do
+    echo $path
+    path_stat=$(stat -c "%a" $path)
+    if [ $path_stat -ne 777 ]
+    then
+      echo "change file stat 777"
+      chmod -R 777 $path
+    fi
+ done
+
+ output=${BATCH_OUTPUT_PATH//\"/}
+ output=${output//[/}
+ output=${output//]/}
+ output=${output//,/ }
+  echo  ${output}
+ for path in $output
+ do
+    echo $path
+    path_stat=$(stat -c "%a" $path)
+    if [ $path_stat -ne 777 ]
+    then
+      echo "change file stat 777"
+      chmod -R 777 $path
+    fi
+ done
+}
